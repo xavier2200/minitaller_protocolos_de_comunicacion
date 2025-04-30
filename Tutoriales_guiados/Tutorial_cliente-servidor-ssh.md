@@ -1,11 +1,29 @@
 # Tutorial sobre configuracion de un servidor ssh y administracion de claves criptograficas  
 En este Tutorial guiado aprenderá a como administrar de forma basica un servidor ssh y varias claves criptograficas en su computadora
 
+## Configuracion del contenedor docker
+Primero creamos el contenedor ejectutando el siguiente comando dentro de la carpeta donde se encuentra el archivo ```compose.yaml```
+
+```
+docker compose up --build
+```
+
+Probamos conectarnos al contenedor usando el siguiente comando:
+
+```
+ssh root@localhost -p 2222
+```
+**Nota:** la contraseña es ```root```
+
+Luego cerramos la conexion colocando ```exit```
+
 ## Administracion basica de claves criptograficas ssh
 
 Este es un paso escencial ya que las claves criptograficas son las herramientas que utiliza este protocolo para realizar la autenticación. Utilizar la misma clave para todos los servidores a los cuales nos conectamos no es lo adecuado, ya que si se compromete la seguridad de la clave privada comprometemos la seguridad de todos los servidores.
 
-Ahora vamos a crear los pares de llaves publicas y privadas para conectarnos a distintos servicios:
+Ahora vamos a crear los pares de llaves publicas y privadas para conectarnos a distintos servidores:
+
+Primero abrimos una nueva terminal **por facilidad es necesario estar en el directorio Home** caso contrario ejecutal ```cd```
 
 Comando para crear el par de claves:
 
@@ -78,6 +96,24 @@ Number of key(s) added: 1
 
 Now try logging into the machine, with:   "ssh -p '2222' 'root@localhost'"
 and check to make sure that only the key(s) you wanted were added.
+```
+Ahora si probamos entrar usando ssh no nos deberia pedir contraseña
+
+```
+xavier@pop-os:~$ ssh root@localhost -p 2222
+Welcome to Ubuntu 22.04.5 LTS (GNU/Linux 6.12.10-76061203-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com
+ * Management:     https://landscape.canonical.com
+ * Support:        https://ubuntu.com/pro
+
+This system has been minimized by removing packages and content that are
+not required on a system that users do not log into.
+
+To restore this content, you can run the 'unminimize' command.
+Last login: Wed Apr 30 00:53:51 2025 from 172.19.0.1
+root@1ca64d5cff24:~# 
+
 ```
 
 ## Configuracion basica de un servidor ssh
