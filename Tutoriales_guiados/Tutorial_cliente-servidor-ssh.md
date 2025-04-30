@@ -18,16 +18,15 @@ las banderas ```-C``` y ```-t``` indican que se quiere agregar un comentario y s
 ### Ejemplo practico:
 
 ```
-xavier@pop-os:~$ ssh-keygen -t ed25519 -C "proxmox-server" 
-
+xavier@pop-os:~$ ssh-keygen -t ed25519 -C "minitaller-ssh"
 Generating public/private ed25519 key pair.
 ```
 En el siguiente paso es importante especificar el archivo en el cual se quiere guardar la nueva clave, ya que no nos interesa sobreescribir las demas claves.
 
 ```
-Enter file in which to save the key (/home/xavier/.ssh/id_ed25519): /home/xavier/.ssh/proxmox-server
+Enter file in which to save the key (/home/xavier/.ssh/id_ed25519): /home/xavier/.ssh/prueba-minitaller
 ```
-Es importante agregar una frase para proteger aun mas la clave. Ya que si logran robar la clave privada, aun es necesario la frase para poder usarla.
+Es importante agregar una frase para proteger la clave. Ya que si logran robar la clave privada, aun es necesario la frase para poder desencriptarla.
 
 ```
 Enter passphrase (empty for no passphrase): 
@@ -38,45 +37,46 @@ Si todo fue bien, deberia de salir algo asi:
 
 ```
 The key fingerprint is:
-SHA256:oCbx4oS4BM7kgIRZl1Sktaj9KIwTNM6DZ4ok3PQVVmM proxmox-server
+SHA256:9HXKucUVPf4dFjKgmFstJWOi0rg7f5PoRU2uBwv2tNg minitaller-ssh
 The key's randomart image is:
 +--[ED25519 256]--+
-|.+..o++o.E       |
-|=  ..+..o .      |
-|++..o o.         |
-|#.+=....         |
-|*@B.=.  S        |
-|=@.+ o           |
-|* + . .          |
-| . .             |
-|                 |
+|       . + o.  ..|
+|    o . = *  o oo|
+|   o o o.= .. = +|
+|    o  .*..o = = |
+|   . o =So. + + +|
+|    o B =    o  o|
+|   o ..E..  .    |
+|    o..+.        |
+|    .o. .        |
 +----[SHA256]-----+
+
 
 ```
 
 Ahora vamos a copiar la clave al servidor de interés:
 ```
-ssh-copy-id path-to-the-public-key user@servidor-de-interes.local
+ssh-copy-id -i path-to-the-public-key root@localhost -p 22222
 ```
 Podemos usar las banderas ```-p``` para indicar el puerto.
 
 ### Ejemplo practico
 
 ```
-ssh-copy-id -i /home/xavier/.ssh/proxmox-server.pub root@192.168.1.10
+xavier@pop-os:~$ ssh-copy-id -p 2222 -i .ssh/prueba-minitaller.pub root@localhost
 ```
 Si todo sale bien, nos tiene que salir algo como esto:
 
 ```
-xavier@pop-os:~$ ssh-copy-id -i .ssh/proxmox-server-1.pub root@192.168.1.10
-/usr/bin/ssh-copy-id: INFO: Source of key(s) to be installed: ".ssh/proxmox-server-1.pub"
+xavier@pop-os:~$ ssh-copy-id -p 2222 -i .ssh/prueba-minitaller.pub root@localhost
+/usr/bin/ssh-copy-id: INFO: Source of key(s) to be installed: ".ssh/prueba-minitaller.pub"
 /usr/bin/ssh-copy-id: INFO: attempting to log in with the new key(s), to filter out any that are already installed
 /usr/bin/ssh-copy-id: INFO: 1 key(s) remain to be installed -- if you are prompted now it is to install the new keys
-root@192.168.1.10's password: 
+root@localhost's password: 
 
 Number of key(s) added: 1
 
-Now try logging into the machine, with:   "ssh 'root@192.168.1.10'"
+Now try logging into the machine, with:   "ssh -p '2222' 'root@localhost'"
 and check to make sure that only the key(s) you wanted were added.
 ```
 
