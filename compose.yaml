@@ -9,7 +9,7 @@ services:
     restart: unless-stopped
     command: bash -c "
       apt update &&
-      apt install -y openssh-server nano &&
+      apt install -y openssh-server nano sudo &&
       mkdir -p /var/run/sshd &&
       echo 'root:root' | chpasswd &&
       sed -i 's/^#PermitRootLogin.*/PermitRootLogin yes/' /etc/ssh/sshd_config &&

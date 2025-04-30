@@ -208,6 +208,83 @@ Entramos al archivo ```sshd_config```
 ```
 nano sshd_config -l
 ```
-Buscamos la linea 57 ```PasswordAuthentication no ```
+Buscamos la linea 57 ```PasswordAuthentication yes -> no ``` guardamos y reseteamos el contenedor desde una terminal de la maquina host ejecutando lo siguiente:
 
+```
+docker restart ubuntu22-ssh
+```
+La conexion se tuvo que cerrar, ahora si probamos iniciar con ```user1``` vemos que nos impide la conexión:
+```
+xavier@pop-os:~$ ssh user1@localhost -p 2222
+user1@localhost: Permission denied (publickey).
+``` 
+Para recuperar el acceso usando ```user1``` necesitamos agregar una llave publica al archivo ```/home/user1/.ssh/authorized_keys``` por simplicidad copiamos y pegamos la misma llave publica que creamos al inicio. Lo ideal seria crear una nueva.
 
+Reseteamos el contenedor ```docker restart ubuntu22-ssh```
+
+```
+Welcome to Ubuntu 22.04.5 LTS (GNU/Linux 6.12.10-76061203-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com
+ * Management:     https://landscape.canonical.com
+ * Support:        https://ubuntu.com/pro
+
+This system has been minimized by removing packages and content that are
+not required on a system that users do not log into.
+
+To restore this content, you can run the 'unminimize' command.
+Last login: Wed Apr 30 02:25:36 2025 from 172.19.0.1
+user1@1ca64d5cff24:~$ 
+```
+
+Como podemos ver, recuperamos el acceso remoto con ese usuario.
+
+Como ultima buena practica bueno deshabilitar el inicio remoto como usuario ```root``` y asignar un usuario con capacidad de ```sudo```.
+
+Antes de deshabilitar el acceso como root, es necesario agregar ```user1``` al grupo de ```sudoers```
+
+Primero ingresamos como usuario ```root``` y una vez dentro, vamos a ejecutar: 
+```
+root@1ca64d5cff24:~# adduser user1 sudo
+```
+Si todo es correcto, tendriamos lo siguiente:
+```
+Adding user `user1' to group `sudo' ...
+Adding user user1 to group sudo
+Done.
+```
+Para comprobar el funcionamiento, iniciamos con ```user1``` y deshabilitamos el acceso con el usuario root linea 33 del archivo ```/etc/ssh/sshd_config```:
+```
+ PermitRootLogin no
+```
+
+Reiniciamos el contenedor ```docker restart ubuntu22-ssh```
+
+Si intentamos iniciar como root, nos da el siguiente resultado aunque la llave esté autorizada:
+```
+xavier@pop-os:~$ ssh root@localhost -p 2222
+root@localhost: Permission denied (publickey).
+```
+Tambien podemos cambiar el puerto que utiliza ssh para conectarse modificando la siguiente linea del archivo ```sshd_config``` es necesario descomentar la linea y poner el puerto que uno desee. 
+
+Hay que tener cuidado que no haya otra aplicacion usando el mismo puerto
+
+```
+#Port 22
+```
+Si queremos correr una aplicacion grafica en la computadora remota podemos hacer uso del redireccionamiento de x11.
+
+Vemos que en este caso ya esta habilitado el redireccionamiento de x11:
+```
+X11Forwarding yes
+```
+
+Usemos xeyes para probar:
+
+Primero, cerramos la conexion y nos volvemos a conectar usando la bandera ```-X``` como se puede ver:
+```
+ssh user1@localhost -p 2222 -X
+```
+Dentro corremos el comando ```xeyes``` y nos deberia aparecer la siguiente ventana:
+
+![image](./fig/xeyes.png)
