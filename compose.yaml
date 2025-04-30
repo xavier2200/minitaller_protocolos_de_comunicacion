@@ -1,0 +1,17 @@
+version: "3.8"
+
+services:
+  minitaller-ssh:
+    image: ubuntu:22.04
+    container_name: ubuntu22-ssh
+    ports:
+      - "2222:22"
+    restart: unless-stopped
+    command: bash -c "
+      apt update &&
+      apt install -y openssh-server nano &&
+      mkdir -p /var/run/sshd &&
+      echo 'root:root' | chpasswd &&
+      sed -i 's/^#PermitRootLogin.*/PermitRootLogin yes/' /etc/ssh/sshd_config &&
+      sed -i 's/^#PasswordAuthentication.*/PasswordAuthentication yes/' /etc/ssh/sshd_config &&
+      /usr/sbin/sshd -D"
