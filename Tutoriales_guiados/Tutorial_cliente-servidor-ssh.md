@@ -130,3 +130,84 @@ Ahora que hacemos si queremos acceder de forma remota a nuestra computadora? Ten
 - Prevenir el acceso como root usando ssh
 - Prevenir el acceso utilizando la contraseña de usuario
 - Cambiar el puerto predeterminado
+
+Empezamos iniciando session en el contenedor por medio de ssh usando en siguiente comando:
+
+```
+ssh root@localhost -p 2222
+```
+Notemos que ahora no nos solicita la contraseña
+
+Dentro del contenedor vamos a crear un usuario ejecutando:
+```
+adduser user1
+```
+Lo que deberiamos ver:
+```
+root@1ca64d5cff24:~# adduser user1
+Adding user `user1' ...
+Adding new group `user1' (1001) ...
+Adding new user `user1' (1001) with group `user1' ...
+Creating home directory `/home/user1' ...
+Copying files from `/etc/skel' ...
+New password: 
+Retype new password: 
+passwd: password updated successfully
+Changing the user information for user1
+Enter the new value, or press ENTER for the default
+	Full Name []: 
+	Room Number []: 
+	Work Phone []: 
+	Home Phone []: 
+	Other []: 
+Is the information correct? [Y/n] y
+
+```
+como ejemplo usamos de contraseña ```1234```
+
+Ahora nos salimos del servidor usando ```exit``` y nos conectamos como user1:
+```
+ssh user1@localhost -p 2222
+```
+**Note** que ahora se solicita contraseña, porque la clave que agregamos es para identificar al usuario ```root``` 
+
+Ahora iniciemos como ```root```
+
+Primero como buena practica hacemos una copia del archivo ```sshd_config```
+
+Nos dirigimos al siguiente directorio:
+```
+cd /etc/ssh
+```
+Vemos el contenido con ```ls```
+```
+root@1ca64d5cff24:/etc/ssh# ls
+moduli        ssh_host_ecdsa_key      ssh_host_ed25519_key.pub  ssh_import_id
+ssh_config    ssh_host_ecdsa_key.pub  ssh_host_rsa_key          sshd_config
+ssh_config.d  ssh_host_ed25519_key    ssh_host_rsa_key.pub      sshd_config.d
+```
+Creamos un respaldo del archivo ```sshd_config```
+```
+cp sshd_config ./sshd_config.bak
+```
+Comprobamos con ```ls```
+```
+root@1ca64d5cff24:/etc/ssh# ls
+moduli                  ssh_host_ed25519_key      sshd_config
+ssh_config              ssh_host_ed25519_key.pub  sshd_config.bak
+ssh_config.d            ssh_host_rsa_key          sshd_config.d
+ssh_host_ecdsa_key      ssh_host_rsa_key.pub
+ssh_host_ecdsa_key.pub  ssh_import_id
+root@1ca64d5cff24:/etc/ssh# 
+
+```
+
+Vamos a desactivar el acceso con contraseña como primera medida de seguridad:
+
+Entramos al archivo ```sshd_config```
+```
+nano sshd_config -l
+```
+Buscamos la linea 57 ```PasswordAuthentication no ```
+
+
