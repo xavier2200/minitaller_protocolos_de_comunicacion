@@ -1,8 +1,8 @@
-# Tutorial sobre configuracion de un servidor ssh y administracion de claves criptograficas  
-En este Tutorial guiado aprenderá a como administrar de forma basica un servidor ssh y varias claves criptograficas en su computadora
+# Tutorial sobre configuración de un servidor ssh y administración de claves criptográficas  
+En este tutorial guiado aprenderá como administrar de forma básica un servidor ssh y varias claves criptográficas en su computadora
 
-## Configuracion del contenedor docker
-Primero creamos el contenedor ejectutando el siguiente comando dentro de la carpeta donde se encuentra el archivo ```compose.yaml```
+## Configuración del contenedor docker
+Primero creamos el contenedor ejecutando el siguiente comando dentro de la carpeta donde se encuentra el archivo ```compose.yaml```
 
 ```
 docker compose up --build
@@ -15,15 +15,15 @@ ssh root@localhost -p 2222
 ```
 **Nota:** la contraseña es ```root```
 
-Luego cerramos la conexion colocando ```exit```
+Luego cerramos la conexión colocando ```exit```
 
-## Administracion basica de claves criptograficas ssh
+## Administración básica de claves criptográficas ssh
 
-Este es un paso escencial ya que las claves criptograficas son las herramientas que utiliza este protocolo para realizar la autenticación. Utilizar la misma clave para todos los servidores a los cuales nos conectamos no es lo adecuado, ya que si se compromete la seguridad de la clave privada comprometemos la seguridad de todos los servidores.
+Este es un paso esencial ya que las claves criptográficas son las herramientas que utiliza este protocolo para realizar la autenticación. Utilizar la misma clave para todos los servidores a los cuales nos conectamos no es lo adecuado, ya que si se compromete la seguridad de la clave privada comprometemos la seguridad de todos los servidores.
 
-Ahora vamos a crear los pares de llaves publicas y privadas para conectarnos a distintos servidores:
+Ahora vamos a crear los pares de llaves públicas y privadas para conectarnos a distintos servidores:
 
-Primero abrimos una nueva terminal **por facilidad es necesario estar en el directorio Home** caso contrario ejecutal ```cd```
+Primero abrimos una nueva terminal **por facilidad es necesario estar en el directorio Home** caso contrario ejecutamos ```cd```
 
 Comando para crear el par de claves:
 
@@ -33,13 +33,13 @@ ssh-keygen -t ed25519 -C "comentario-descriptivo"
 
 las banderas ```-C``` y ```-t``` indican que se quiere agregar un comentario y se quiere indicar el tipo de clave.
 
-### Ejemplo practico:
+### Ejemplo práctico:
 
 ```
 xavier@pop-os:~$ ssh-keygen -t ed25519 -C "minitaller-ssh"
 Generating public/private ed25519 key pair.
 ```
-En el siguiente paso es importante especificar el archivo en el cual se quiere guardar la nueva clave, ya que no nos interesa sobreescribir las demas claves.
+En el siguiente paso es importante especificar el archivo en el cual se quiere guardar la nueva clave, ya que no nos interesa sobreescribir las demás claves.
 
 ```
 Enter file in which to save the key (/home/xavier/.ssh/id_ed25519): /home/xavier/.ssh/prueba-minitaller
@@ -51,7 +51,7 @@ Enter passphrase (empty for no passphrase):
 Enter same passphrase again: 
 
 ```
-Si todo fue bien, deberia de salir algo asi:
+Si todo fue bien, debería de salir algo así:
 
 ```
 The key fingerprint is:
@@ -74,11 +74,11 @@ The key's randomart image is:
 
 Ahora vamos a copiar la clave al servidor de interés:
 ```
-ssh-copy-id -i path-to-the-public-key root@localhost -p 22222
+ssh-copy-id -i path-to-the-public-key -p 2222 root@localhost
 ```
-Podemos usar las banderas ```-p``` para indicar el puerto.
+Podemos usar la bandera ```-p``` para indicar el puerto.
 
-### Ejemplo practico
+### Ejemplo práctico
 
 ```
 xavier@pop-os:~$ ssh-copy-id -p 2222 -i .ssh/prueba-minitaller.pub root@localhost
@@ -97,7 +97,7 @@ Number of key(s) added: 1
 Now try logging into the machine, with:   "ssh -p '2222' 'root@localhost'"
 and check to make sure that only the key(s) you wanted were added.
 ```
-Ahora si probamos entrar usando ssh no nos deberia pedir contraseña
+Ahora si probamos entrar usando ssh no nos debería pedir contraseña
 
 ```
 xavier@pop-os:~$ ssh root@localhost -p 2222
@@ -116,22 +116,22 @@ root@1ca64d5cff24:~#
 
 ```
 
-## Configuracion basica de un servidor ssh
+## Configuración básica de un servidor ssh
 
-Hay ciertas cosas básicas que podemos configurar para que la computadora que queremos acceder de forma remota se encuentre lo mas segura posible como son las siguientes:
+Hay ciertas cosas básicas que podemos configurar para que la computadora que queremos acceder de forma remota se encuentre lo más segura posible como son las siguientes:
 
-- Cerrar puertos que no esten en uso
+- Cerrar puertos que no estén en uso
 - Usar claves fuertes para los usuarios
 - Evitar que una gran cantidad de usuarios tengan acceso root
 - Habilitar un firewall
 
-Ahora que hacemos si queremos acceder de forma remota a nuestra computadora? Tenemos que implementar ciertas configuraciones para poder realizar labores administrativas de forma efectiva sin que esto sea una vulnerabilidad para el servidor. Por eso es necesario implementar las siguientes buenas practicas:
+¿Ahora que hacemos si queremos acceder de forma remota a nuestra computadora? Tenemos que implementar ciertas configuraciones para poder realizar labores administrativas de forma efectiva sin que esto sea una vulnerabilidad para el servidor. Por eso es necesario implementar las siguientes buenas prácticas:
 
 - Prevenir el acceso como root usando ssh
 - Prevenir el acceso utilizando la contraseña de usuario
 - Cambiar el puerto predeterminado
 
-Empezamos iniciando session en el contenedor por medio de ssh usando en siguiente comando:
+Empezamos iniciando sesión en el contenedor por medio de ssh usando el siguiente comando:
 
 ```
 ssh root@localhost -p 2222
@@ -142,7 +142,7 @@ Dentro del contenedor vamos a crear un usuario ejecutando:
 ```
 adduser user1
 ```
-Lo que deberiamos ver:
+Lo que deberíamos ver:
 ```
 root@1ca64d5cff24:~# adduser user1
 Adding user `user1' ...
@@ -169,11 +169,13 @@ Ahora nos salimos del servidor usando ```exit``` y nos conectamos como user1:
 ```
 ssh user1@localhost -p 2222
 ```
-**Note** que ahora se solicita contraseña, porque la clave que agregamos es para identificar al usuario ```root``` 
+**Note** que ahora se solicita contraseña, porque la clave que agregamos es para identificar al usuario ```root```
+
+Nos salimos ```exit```
 
 Ahora iniciemos como ```root```
 
-Primero como buena practica hacemos una copia del archivo ```sshd_config```
+Primero como buena práctica hacemos una copia del archivo ```sshd_config```
 
 Nos dirigimos al siguiente directorio:
 ```
@@ -208,17 +210,17 @@ Entramos al archivo ```sshd_config```
 ```
 nano sshd_config -l
 ```
-Buscamos la linea 57 ```PasswordAuthentication yes -> no ``` guardamos y reseteamos el contenedor desde una terminal de la maquina host ejecutando lo siguiente:
+Buscamos la línea 57 ```PasswordAuthentication yes -> no ``` guardamos y reseteamos el contenedor desde una terminal de la maquina host ejecutando lo siguiente:
 
 ```
 docker restart ubuntu22-ssh
 ```
-La conexion se tuvo que cerrar, ahora si probamos iniciar con ```user1``` vemos que nos impide la conexión:
+La conexión se tuvo que cerrar, ahora si probamos iniciar con ```user1``` vemos que nos impide la conexión:
 ```
 xavier@pop-os:~$ ssh user1@localhost -p 2222
 user1@localhost: Permission denied (publickey).
 ``` 
-Para recuperar el acceso usando ```user1``` necesitamos agregar una llave publica al archivo ```/home/user1/.ssh/authorized_keys``` por simplicidad copiamos y pegamos la misma llave publica que creamos al inicio. Lo ideal seria crear una nueva.
+Para recuperar el acceso usando ```user1``` necesitamos agregar una llave pública al archivo ```/home/user1/.ssh/authorized_keys``` por simplicidad copiamos y pegamos la misma llave pública que creamos al inicio. Lo ideal sería crear una nueva.
 
 Reseteamos el contenedor ```docker restart ubuntu22-ssh```
 
@@ -239,7 +241,7 @@ user1@1ca64d5cff24:~$
 
 Como podemos ver, recuperamos el acceso remoto con ese usuario.
 
-Como ultima buena practica bueno deshabilitar el inicio remoto como usuario ```root``` y asignar un usuario con capacidad de ```sudo```.
+Como última buena práctica bueno deshabilitar el inicio remoto como usuario ```root``` y asignar un usuario con capacidad de ```sudo```.
 
 Antes de deshabilitar el acceso como root, es necesario agregar ```user1``` al grupo de ```sudoers```
 
@@ -247,13 +249,13 @@ Primero ingresamos como usuario ```root``` y una vez dentro, vamos a ejecutar:
 ```
 root@1ca64d5cff24:~# adduser user1 sudo
 ```
-Si todo es correcto, tendriamos lo siguiente:
+Si todo es correcto, tendríamos lo siguiente:
 ```
 Adding user `user1' to group `sudo' ...
 Adding user user1 to group sudo
 Done.
 ```
-Para comprobar el funcionamiento, iniciamos con ```user1``` y deshabilitamos el acceso con el usuario root linea 33 del archivo ```/etc/ssh/sshd_config```:
+Para comprobar el funcionamiento, iniciamos con ```user1``` y deshabilitamos el acceso con el usuario root línea 33 del archivo ```/etc/ssh/sshd_config```:
 ```
  PermitRootLogin no
 ```
@@ -265,26 +267,32 @@ Si intentamos iniciar como root, nos da el siguiente resultado aunque la llave e
 xavier@pop-os:~$ ssh root@localhost -p 2222
 root@localhost: Permission denied (publickey).
 ```
-Tambien podemos cambiar el puerto que utiliza ssh para conectarse modificando la siguiente linea del archivo ```sshd_config``` es necesario descomentar la linea y poner el puerto que uno desee. 
+También podemos cambiar el puerto que utiliza ssh para conectarse modificando la siguiente línea del archivo ```sshd_config``` es necesario descomentar la línea y poner el puerto que uno desee. 
 
-Hay que tener cuidado que no haya otra aplicacion usando el mismo puerto
+Hay que tener cuidado que no haya otra aplicación usando el mismo puerto
 
 ```
 #Port 22
 ```
-Si queremos correr una aplicacion grafica en la computadora remota podemos hacer uso del redireccionamiento de x11.
+Si queremos correr una aplicación grafica en la computadora remota podemos hacer uso del redireccionamiento de x11.
 
-Vemos que en este caso ya esta habilitado el redireccionamiento de x11:
+Vemos que en este caso ya está habilitado el redireccionamiento de x11:
 ```
 X11Forwarding yes
 ```
 
 Usemos xeyes para probar:
 
-Primero, cerramos la conexion y nos volvemos a conectar usando la bandera ```-X``` como se puede ver:
+Primero, cerramos la conexión y nos volvemos a conectar usando la bandera ```-X``` como se puede ver:
 ```
 ssh user1@localhost -p 2222 -X
 ```
-Dentro corremos el comando ```xeyes``` y nos deberia aparecer la siguiente ventana:
+Dentro corremos el comando ```xeyes``` y nos debería aparecer la siguiente ventana:
 
 ![image](./fig/xeyes.png)
+
+Para ver más opciones y detalle de su uso puede consultar el manual de ```ssh``` usando el siguiente comando:
+
+```
+man ssh
+```
