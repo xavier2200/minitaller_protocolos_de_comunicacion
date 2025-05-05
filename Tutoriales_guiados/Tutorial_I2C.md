@@ -9,11 +9,11 @@ Instanciamos lo siguiente:
 
 Debe quedar así:
 
-![image](/fig/lcd_arduino.png)
+![image](./fig/lcd_arduino.png)
 
 Conectamos los pines ```SCL``` cable anaranjado, ```SDA``` cable verde y de alimentación. Debería quedar así:
 
-![image](/fig/conexiones.png)
+![image](./fig/conexiones.png)
 
 Es importante en la configuración del LCD configurar lo siguiente:
 - Type -> PCF8574-based
@@ -64,4 +64,4 @@ Uno de los lcd va a estar atrasado por 5 segundos.
 
 Como se debería de ver:
 
-![image](/fig/lcd_complex.png)
+![image](./fig/lcd_complex.png)
